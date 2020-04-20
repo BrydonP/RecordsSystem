@@ -49,6 +49,9 @@ void createFile(record_link*, char*, char*);
 //ADD
 void addRecord(record_link*);
 
+//Delete
+void deleteHead(record_link**);
+record_link* deleteRecord(char*);
 ///FUNCTIONS///
 
 record_link* createRecords(char* fileName){
@@ -218,4 +221,113 @@ void addRecord(record_link* head){
     strcat(temp,salary);    
     node->link = createRecordLink(temp);
     node->link->link = NULL;
+}
+
+void deleteHead(record_link** head){
+    record_link* toDelete = *head;
+    *head = (*head)->link;
+    free(toDelete->sin);
+    free(toDelete->firstName);
+    free(toDelete->lastName);
+    free(toDelete->salary);
+    free(toDelete);
+}
+
+record_link* deleteRecord(char* recordName){
+    record_link* headDelete = createRecords(recordName);
+    char deleteChoice[MAX_LEN];
+    int deleteChoiceInt = 0;
+    char key[MAX_LEN];
+    record_link* node = headDelete;
+    record_link* previous = headDelete;
+
+    
+    do{
+        printf("Which value would you like to delete by?\n");
+        printf("1. SIN \n2. First Name \n3. Last Name \n4. Salary\n");
+        fgets(deleteChoice, MAX_LEN, stdin);
+        FLUSH;
+        RMN(deleteChoice);  
+        deleteChoiceInt = strtol(deleteChoice, NULL, 10);
+        if(deleteChoiceInt > 5 || deleteChoiceInt < 1){
+            printf("Please a number from 1-4\n");
+        }
+    }while(deleteChoiceInt > 5 || deleteChoiceInt < 1);
+    printf("What do you want to search? ");
+    fgets(key, MAX_LEN, stdin);
+    FLUSH;
+    RMN(key);   
+
+            
+    if(deleteChoice[0] == '1'){
+            while(node != NULL){
+                if(!strcmp(key,node->sin)){
+                    if(node == headDelete){
+                        deleteHead(&headDelete);    
+                        previous = headDelete;
+                        node = node->link;
+                    }
+                    break;
+                }                
+                previous = node;
+                node = node->link;
+            }       
+    }        
+    
+    if(deleteChoice[0] == '2'){
+            while(node != NULL){
+                if(!strcmp(key,node->firstName)){  
+                    if(node == headDelete){
+                        deleteHead(&headDelete);        
+                        previous = headDelete;
+                        node = node->link;                   
+                    }
+                    break;
+                }                
+                previous = node;
+                node = node->link;
+            }       
+    }
+    
+    if(deleteChoice[0] == '3'){
+            while(node != NULL){
+                if(!strcmp(key,node->lastName)){
+                    if(node == headDelete){
+                        deleteHead(&headDelete);       
+                        previous = headDelete;
+                        node = node->link;                    
+                    }
+                    break;
+                }                
+                previous = node;
+                node = node->link;
+            }       
+    }
+    
+    if(deleteChoice[0] == '4'){
+            while(node != NULL){
+                if(!strcmp(key,node->salary)){  
+                    if(node == headDelete){
+                        deleteHead(&headDelete);        
+                        previous = headDelete;
+                        node = node->link;                   
+                    }
+                    break;
+                }                
+                previous = node;
+                node = node->link;
+            }       
+    }    
+    
+    //Repair Link
+    previous->link = node->link;
+    
+    //Delete / Free Memory
+    free(node->sin);
+    free(node->firstName);
+    free(node->lastName);
+    free(node->salary);
+    free(node);
+
+    return headDelete;
 }
