@@ -39,22 +39,25 @@ struct node{
 }; 
 
 ///SIGNATURES///
+//LIST
 record_link* (createRecordLink(char*));
-void printRecords(char*);
+record_link* createRecords(char*);
 char* createStructPtr(char* token);
 void printLinkedList(record_link*);
 void createFile(record_link*, char*, char*);
 
+//ADD
+void addRecord(record_link*);
+
 ///FUNCTIONS///
 
-void printRecords(char* fileName){
+record_link* createRecords(char* fileName){
     FILE* file = fopen(fileName, "r"); 
     if (file == NULL) {
         printf("Error opening input file\n");
         exit(-1);
     }
     char buffer[1024];    
-    
     record_link* head = NULL; 
     record_link* current = NULL;
     record_link* temp = NULL;
@@ -72,7 +75,7 @@ void printRecords(char* fileName){
    }
     temp->link = NULL; //Terminate Last Link
     fclose(file);
-    printLinkedList(head);
+    return head;
 }
 
 record_link* createRecordLink(char* input){
@@ -118,7 +121,7 @@ void printLinkedList(record_link* head){
     record_link* temp = NULL;
    //Print All Records
     while(current != NULL){
-        printf("Record: \n");
+        printf("\nRecord: \n");
         printf("SIN: %s\n", current->sin);
         printf("First Name: %s\n", current->firstName);
         printf("Last Name: %s\n", current->lastName);
@@ -142,4 +145,77 @@ void createFile(record_link* node, char* fileName, char* header){
     }
     fclose(fout);//Close File
     printf("%s has been saved\n", fileName);
+}
+
+void addRecord(record_link* head){
+    record_link* node = head;
+    
+    //traverse to the end of the LL
+    while(node->link != NULL){
+        node = node->link;
+    }
+    printf("Adding a new record:\n");
+    
+    //SIN
+    char sin[MAX_LEN];    
+    do{
+        printf("SIN: ");
+        fgets(sin, MAX_LEN, stdin);     
+        FLUSH;
+        RMN(sin);
+        if(strlen(sin) != 9){
+            printf("Incorrect SIN, Please try again\n");            
+        }
+    }while(strlen(sin) != 9);
+    
+    //First Name
+    char firstName[MAX_LEN];
+    do{
+        printf("First name: ");
+        fgets(firstName, MAX_LEN, stdin);  
+        FLUSH;
+        RMN(firstName); 
+        if(strlen(firstName) == 0){
+            printf("Cannot be empty\n");
+        }
+    }while(strlen(firstName) == 0);
+
+    
+    //Last Name
+    char lastName[MAX_LEN];
+    do{
+        printf("Last name: ");
+        fgets(lastName, MAX_LEN, stdin);  
+        FLUSH;
+        RMN(lastName);         
+        if(strlen(lastName) == 0){
+            printf("Cannot be empty\n");
+        }
+    }while(strlen(lastName) == 0);
+ 
+    
+    //Salary
+    char salary[MAX_LEN];
+    do{
+        printf("Salary: ");
+        fgets(salary, MAX_LEN, stdin);  
+        FLUSH;
+        RMN(salary);  
+        if(strlen(salary) == 0){
+            printf("Cannot be empty\n");
+        }
+    }while(strlen(salary) == 0);
+        
+    printf("Record Added\n");
+    
+    char temp[MAX_LEN*4];
+    strcpy(temp,sin);
+    strcat(temp,",");
+    strcat(temp,firstName);
+    strcat(temp,",");
+    strcat(temp,lastName);
+    strcat(temp,",");
+    strcat(temp,salary);    
+    node->link = createRecordLink(temp);
+    node->link->link = NULL;
 }

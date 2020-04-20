@@ -11,33 +11,33 @@
 #define MAX_LEN 50
 
 //Basic Structure
-typedef struct { 
-    char* sin; 
-    char* firstName; 
-    char* lastName; 
-    char* salary;
-} stack_t; 
-
-//Structure As LL Link
-typedef struct link record_link;
-struct link{ 
-    char* sin; 
-    char* firstName; 
-    char* lastName; 
-    char* salary;
-    record_link *link;
-}; 
-
-//Structure as BST Node
-typedef struct node record_BST_node;
-struct node{ 
-    char* sin; 
-    char* firstName; 
-    char* lastName; 
-    char* salary;
-    record_BST_node *leftChild;
-    record_BST_node *rightChild;
-}; 
+//typedef struct { 
+//    char* sin; 
+//    char* firstName; 
+//    char* lastName; 
+//    char* salary;
+//} stack_t; 
+//
+////Structure As LL Link
+//typedef struct link record_link;
+//struct link{ 
+//    char* sin; 
+//    char* firstName; 
+//    char* lastName; 
+//    char* salary;
+//    record_link *link;
+//}; 
+//
+////Structure as BST Node
+//typedef struct node record_BST_node;
+//struct node{ 
+//    char* sin; 
+//    char* firstName; 
+//    char* lastName; 
+//    char* salary;
+//    record_BST_node *leftChild;
+//    record_BST_node *rightChild;
+//}; 
 
 int main() {
     //Menu Prompt
@@ -64,17 +64,47 @@ int main() {
     FILE* fin;
     char fileName[MAX_LEN];
     //Prompt to get filename
-    printf("File to load records from: ");
+    printf("File to load records from: \n");
     //Input Variable
-    fgets(fileName, MAX_LEN, stdin);
-    FLUSH;
-    RMN(fileName);
+//    fgets(fileName, MAX_LEN, stdin);
+//    FLUSH;
+//    RMN(fileName);
     
 
 
-    //List Records
+    // List Records    
+    char recordName[] = "records.csv";
+    record_link* head = createRecords(recordName);
     
-    printRecords(fileName);
+    
+    
+    // Add Record
+    addRecord(head);
+    char input[MAX_LEN];
+    do{
+        printf("Would you like to add another record? (Y/N)\n");
+        fgets(input, MAX_LEN, stdin);
+        FLUSH;
+        RMN(input);  
+        if(input[0] == 'Y'){
+            addRecord(head);
+        }else{
+            printf("Please choose Y or N");
+        }                    
+    }while(input[0] == 'Y');
+    
+    
+//    char input[MAX_LEN];
+//    printf("Would you like to add another record? 'Y/N' ");
+//    fgets(input, MAX_LEN, stdin);
+//    FLUSH;
+//    RMN(input);    
+//    while(strlen(input) == 'Y'){
+//        addRecord(head);
+//    }
+    
+    printLinkedList(head);
+    
     return 0;
     
    //Add Record
@@ -93,7 +123,7 @@ int main() {
     //Input Variable
     fgets(newFileName, MAX_LEN, stdin);
     FLUSH;
-    RMN(buffer);
+//    RMN(buffer);
 
     if (newFileName != "\n") {
 
