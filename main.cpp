@@ -46,7 +46,7 @@ int main() {
 
     // List Records    
     char recordName[] = "records.csv";
-//    record_link* head = createRecords(recordName);
+    record_link* head = createRecords(recordName);
 //    printLinkedList(head);
 
     
@@ -81,10 +81,11 @@ int main() {
     
     //Sort Records
     
-    
-    
-    
-    
+    record_BST_node* headBST = sortRecords(head, 1);
+    printf("Ascending: \n");
+    inorderPrint(headBST);
+    printf("Descending: \n");
+    reverseOrderPrint(sortRecords(head, 0));
     
     
     
@@ -92,7 +93,7 @@ int main() {
     
     
     //Print Records
-    printLinkedList(head);
+//    printLinkedList(head);
     
     
     return 0;

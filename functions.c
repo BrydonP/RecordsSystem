@@ -36,7 +36,7 @@ struct node{
     char* salary;
     record_BST_node *leftChild;
     record_BST_node *rightChild;
-}; 
+};
 
 ///SIGNATURES///
 //LIST
@@ -52,6 +52,13 @@ void addRecord(record_link*);
 //Delete
 void deleteHead(record_link**);
 record_link* deleteRecord(char*);
+
+//Sort
+record_BST_node* sortRecords(record_link*, int);
+record_BST_node* convertLinkToBST(record_link*);
+record_BST_node* insertNode(record_BST_node*, record_BST_node*);
+void inorderPrint(record_BST_node*);
+void reverseOrderPrint(record_BST_node*);
 ///FUNCTIONS///
 
 record_link* createRecords(char* fileName){
@@ -330,4 +337,82 @@ record_link* deleteRecord(char* recordName){
     free(node);
 
     return headDelete;
+}
+
+
+record_BST_node* sortRecords(record_link* oldHead, int direc){    
+    //direction 1 = ascending 0 = descending
+    record_BST_node* head = NULL;
+    record_BST_node* currentNode = head;
+    record_BST_node* newNode;
+    record_link* nextLink = NULL;
+    
+    if(head == NULL){
+        nextLink = oldHead->link;
+        head = convertLinkToBST(oldHead);
+        currentNode = head;
+    }
+  
+    if(direc){//Ascending
+        while(nextLink != NULL){
+            newNode = convertLinkToBST(nextLink);
+            insertNode(head, newNode);
+            nextLink = nextLink->link; //Set Next Link
+        }
+    }else{//Descending
+        while(nextLink != NULL){
+            newNode = convertLinkToBST(nextLink);
+            insertNode(head, newNode);
+            nextLink = nextLink->link; //Set Next Link
+        }
+    }
+    
+    return head;
+}
+
+
+
+record_BST_node* convertLinkToBST(record_link* old){
+    record_BST_node* newNode = (record_BST_node*) malloc(sizeof(record_BST_node));
+    if(newNode == NULL){
+        printf("Not enough memory for BST_Node");
+        exit(-1);
+    }
+    newNode->sin = old->sin;
+    newNode->firstName = old->firstName;
+    newNode->lastName = old->lastName;
+    newNode->salary = old->salary;
+    newNode->leftChild = NULL;
+    newNode->rightChild = NULL;
+    return newNode;
+}
+
+
+
+record_BST_node* insertNode(record_BST_node* currentNode, record_BST_node* newNode){
+    if(currentNode == NULL){
+        return newNode;
+    }    
+    if(strtol(newNode->sin,NULL,10) < strtol(currentNode->sin,NULL,10)){
+        currentNode->leftChild = insertNode(currentNode->leftChild, newNode);
+    }else{
+        currentNode->rightChild = insertNode(currentNode->rightChild, newNode);
+    }  
+    return currentNode;
+}
+
+void inorderPrint(record_BST_node* root){
+    if(root !=NULL){
+        inorderPrint(root->leftChild);
+        printf("SIN: %s\n", root->sin);
+        inorderPrint(root->rightChild);
+    }
+}
+
+void reverseOrderPrint(record_BST_node* root){
+    if(root !=NULL){
+        reverseOrderPrint(root->rightChild);
+        printf("SIN: %s\n", root->sin);
+        reverseOrderPrint(root->leftChild);
+    }
 }
