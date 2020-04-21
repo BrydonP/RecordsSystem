@@ -55,7 +55,7 @@ void deleteHead(record_link**);
 record_link* deleteRecord(char*);
 
 //Sort
-record_BST_node* sortRecords(record_link*, int);
+record_BST_node* sortRecords(record_link*);
 record_BST_node* convertLinkToBST(record_link*);
 record_BST_node* insertNode(record_BST_node*, record_BST_node*);
 void inorderPrint(record_BST_node*);
@@ -264,7 +264,6 @@ record_link* deleteRecord(char* recordName){
     char key[MAX_LEN];
     record_link* node = headDelete;
     record_link* previous = headDelete;
-
     
     do{
         printf("Which value would you like to delete by?\n");
@@ -357,7 +356,7 @@ record_link* deleteRecord(char* recordName){
 }
 
 //Sort
-record_BST_node* sortRecords(record_link* oldHead, int direc){    
+record_BST_node* sortRecords(record_link* oldHead){    
     //direction 1 = ascending 0 = descending
     record_BST_node* head = NULL;
     record_BST_node* currentNode = head;
@@ -369,21 +368,11 @@ record_BST_node* sortRecords(record_link* oldHead, int direc){
         head = convertLinkToBST(oldHead);
         currentNode = head;
     }
-  
-    if(direc){//Ascending
-        while(nextLink != NULL){
-            newNode = convertLinkToBST(nextLink);
-            insertNode(head, newNode);
-            nextLink = nextLink->link; //Set Next Link
-        }
-    }else{//Descending
-        while(nextLink != NULL){
-            newNode = convertLinkToBST(nextLink);
-            insertNode(head, newNode);
-            nextLink = nextLink->link; //Set Next Link
-        }
+    while(nextLink != NULL){
+        newNode = convertLinkToBST(nextLink);
+        insertNode(head, newNode);
+        nextLink = nextLink->link; //Set Next Link
     }
-    
     return head;
 }
 
