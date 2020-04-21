@@ -74,7 +74,10 @@ record_link* peek(stack_t*);
 void printStack(stack_t*);
 stack_t* searchRecords(record_link*);
 
-
+//Savings Files
+void saveFile(record_link*, FILE*);
+FILE* newFile();
+void saveFileFromStack(stack_t*, FILE*);
 #endif /* FUNCTIONS_H */
 
 

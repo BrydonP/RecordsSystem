@@ -495,3 +495,58 @@ void printStack(stack_t* resultStack){
         printf("Nothing Found! Maybe search something else?\n");
     }
 }
+
+
+void saveFile(record_link* head, FILE* fout){
+    //Print File Header
+    fprintf(fout, "ID,FirstName,LastName,Number");
+    while (head != NULL) {
+        fputs("\n", fout);
+        fputs(head->sin, fout);
+        fputs(",",fout);            
+        fputs(head->firstName, fout);
+        fputs(",",fout);     
+        fputs(head->lastName, fout);
+        fputs(",",fout);             
+        fputs(head->salary, fout);
+        head = head->link;
+    }
+    printf("\nData saved in the file name of file");        
+    fclose(fout);
+}
+
+FILE* newFile(){
+    char newFileName[MAX_LEN];
+    printf("\nEnter new file name or press Enter to skip:");    
+    fgets(newFileName, MAX_LEN, stdin);
+    FLUSH;
+    RMN(newFileName);
+    if (strlen(newFileName) > 0) {
+        FILE* fout;
+        fout = fopen(newFileName, "w");
+        if (fout == NULL) {
+            printf("Error opening output file\n");
+            exit(-1);
+        }
+        return fout;
+    }
+}
+
+void saveFileFromStack(stack_t* resultStack, FILE* fout){
+    if(fout == NULL){
+        return;
+    }
+    record_link* popped = NULL;
+    fprintf(fout, "ID,FirstName,LastName,Number");
+    while((popped = pop(resultStack)) != NULL){
+        fputs("\n", fout);
+        fputs(popped->sin, fout);
+        fputs(",",fout);            
+        fputs(popped->firstName, fout);
+        fputs(",",fout);     
+        fputs(popped->lastName, fout);
+        fputs(",",fout);             
+        fputs(popped->salary, fout);
+        popped = popped->link;             
+    }
+}

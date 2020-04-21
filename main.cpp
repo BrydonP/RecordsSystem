@@ -67,19 +67,22 @@ int main() {
             }else{
                 printf("Please select 1 or 0\n");
             }   
-        }while(choice[0] != '1' && choice[0] != '0');    
+        }while(choice[0] != '1' && choice[0] != '0');  
     }else if(menuChoiceInt == 3){
         //Find Records        
         record_link* findHead = createRecords(fileName); //Create LL
         stack_t* searchResults = searchRecords(findHead);
-        printStack(searchResults);
+//        printStack(searchResults);
+        saveFileFromStack(searchResults, newFile());
     }else if(menuChoiceInt == 4){
         //Add Record
         record_link* head = createRecords(fileName);
-        addRecord(head);          
+        addRecord(head); 
+        saveFile(head, newFile());
     }else if(menuChoiceInt == 5){
         //Delete
         record_link* head =  deleteRecord(fileName);
+        saveFile(head, newFile());
     }else{
         printf("Bad Menu Selection!!\n");
     }
@@ -90,49 +93,3 @@ int main() {
 
     return 0;
 }
-
-    /* 
-     * ==============START================
-     * =========Save displayed records===========
-     * ==================================
-     */
-//    char line [1000];
-//    printf("\nSave displayed records in the file (press Enter to skip):");
-//    char newFileName[MAX_LEN];
-//    //Input Variable
-//    fgets(newFileName, MAX_LEN, stdin);
-//    FLUSH;
-////    RMN(buffer);
-//
-//    if (newFileName != "\n") {
-//
-//        FILE* fout;
-//        //Name of output file output csv must be change to variable so its dynamic
-//        fout = fopen(newFileName, "w");
-//        //Check for any problem creating the new csv file
-//        if (fout == NULL) {
-//            perror("Error opening output file\n");
-//            system("pause");
-//            exit(1);
-//
-//        }
-//        //Creates the header of the file
-//        fprintf(fout, "ID,FirstName,LastName,Number\n");
-//
-//        //Goes through all the lines and prints them into the new file skipping the header
-//        while (fgets(line, sizeof (line), fin) != NULL) {
-//            fputs(line, fout);
-//        }
-//        printf("\nData saved in the file name of file");
-//        
-//        //closes output file
-//         fclose(fout);
-//
-//
-//    }
-
-
-//    return 0;
-//}
-
-
