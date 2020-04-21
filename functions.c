@@ -10,12 +10,6 @@
 ///STRUCUTRES///
 
 //Basic Structure
-typedef struct { 
-    char* sin; 
-    char* firstName; 
-    char* lastName; 
-    char* salary;
-} stack_t; 
 
 //Structure As LL Link
 typedef struct link record_link;
@@ -38,6 +32,13 @@ struct node{
     record_BST_node *rightChild;
 };
 
+//Stack for Search Results
+typedef struct { 
+    int top; 
+    size_t capacity; 
+    record_link** array; 
+} stack_t; 
+
 ///SIGNATURES///
 //LIST
 record_link* (createRecordLink(char*));
@@ -59,8 +60,23 @@ record_BST_node* convertLinkToBST(record_link*);
 record_BST_node* insertNode(record_BST_node*, record_BST_node*);
 void inorderPrint(record_BST_node*);
 void reverseOrderPrint(record_BST_node*);
+
+//FIND
+////Stack
+stack_t* createStack(size_t);
+int isFull(stack_t*);
+int isEmpty(stack_t*);
+void push(stack_t*, record_link*);
+record_link* pop(stack_t*);
+stack_t* resizeStack(stack_t*); 
+record_link* peek(stack_t*);
+
+///
+void printStack(stack_t*);
+stack_t* searchRecords(record_link*);
 ///FUNCTIONS///
 
+//List / General
 record_link* createRecords(char* fileName){
     FILE* file = fopen(fileName, "r"); 
     if (file == NULL) {
@@ -113,6 +129,7 @@ record_link* createRecordLink(char* input){
 
 char* createStructPtr(char* token){
     token = strtok(NULL, ",");
+    RMN(token);
     if(strlen(token) == 0){//Verify
         printf("Bad Data");
         exit(-1);
@@ -122,6 +139,7 @@ char* createStructPtr(char* token){
         printf("Memory Allocation Failed\n");
         exit(-1);
     }
+    
     strcpy(ptr, token);    
     return ptr;
 }
@@ -138,7 +156,6 @@ void printLinkedList(record_link* head){
         printf("Salary: %s\n", current->salary);
         temp = current;
         current = current->link;
-        free(temp);
     }
 }
 
@@ -156,7 +173,7 @@ void createFile(record_link* node, char* fileName, char* header){
     fclose(fout);//Close File
     printf("%s has been saved\n", fileName);
 }
-
+//Add
 void addRecord(record_link* head){
     record_link* node = head;
     
@@ -229,7 +246,7 @@ void addRecord(record_link* head){
     node->link = createRecordLink(temp);
     node->link->link = NULL;
 }
-
+//Delete
 void deleteHead(record_link** head){
     record_link* toDelete = *head;
     *head = (*head)->link;
@@ -339,7 +356,7 @@ record_link* deleteRecord(char* recordName){
     return headDelete;
 }
 
-
+//Sort
 record_BST_node* sortRecords(record_link* oldHead, int direc){    
     //direction 1 = ascending 0 = descending
     record_BST_node* head = NULL;
@@ -370,8 +387,6 @@ record_BST_node* sortRecords(record_link* oldHead, int direc){
     return head;
 }
 
-
-
 record_BST_node* convertLinkToBST(record_link* old){
     record_BST_node* newNode = (record_BST_node*) malloc(sizeof(record_BST_node));
     if(newNode == NULL){
@@ -386,8 +401,6 @@ record_BST_node* convertLinkToBST(record_link* old){
     newNode->rightChild = NULL;
     return newNode;
 }
-
-
 
 record_BST_node* insertNode(record_BST_node* currentNode, record_BST_node* newNode){
     if(currentNode == NULL){
@@ -414,5 +427,135 @@ void reverseOrderPrint(record_BST_node* root){
         reverseOrderPrint(root->rightChild);
         printf("SIN: %s\n", root->sin);
         reverseOrderPrint(root->leftChild);
+    }
+}
+///FIND
+stack_t* createStack(size_t capacity){
+    // create stack capacity of 2
+    stack_t* stack = (stack_t*) malloc(sizeof(stack_t));
+    stack->array = (record_link**) malloc(sizeof(record_link*)*capacity);
+    if(stack == NULL || stack->array == NULL){
+        printf("Not enough memory to create stack and its elements");
+        exit(-1);
+    }
+    stack->capacity = capacity;
+    stack->top = -1; // Empty stack
+    return stack;
+}
+
+stack_t* resizeStack(stack_t* stack){   
+    stack = (stack_t*) realloc(stack, sizeof(stack)*2);
+    stack->capacity = stack->capacity * 2;
+    if(stack == NULL){
+       printf("Not enough memory in resizing the stack");
+       exit(-1);
+    }
+    return stack;
+}
+
+void push(stack_t* stack, record_link* link){
+    if(isFull(stack)){
+       stack = resizeStack(stack);
+    }
+    stack->array[++stack->top] = link;
+}
+
+record_link* pop(stack_t* stack){
+    return isEmpty(stack) ? NULL: stack->array[stack->top--];
+}
+
+int isEmpty(stack_t* stack){
+    return stack->top == -1;
+}
+
+int isFull(stack_t* stack){
+    return stack->top == stack->capacity - 1;
+}
+
+record_link* peek(stack_t* stack){
+    return isEmpty(stack) ? NULL: stack->array[stack->top];
+}
+
+stack_t* searchRecords(record_link* findHead){
+    stack_t* resultStack = createStack(2);
+    record_link* node = findHead;
+    char choice[MAX_LEN];
+    char key[MAX_LEN];
+    
+    do{
+        printf("What Do you want to search by: \n");
+        printf("1 - SIN\n2 - First Name\n3 - Last Name\n4 - Salary\n");
+        fgets(choice, MAX_LEN, stdin);
+        FLUSH;
+        RMN(choice);
+        if(choice[0] != '1' && choice[0] != '2' &&  choice[0] != '3' && choice[0] != '4'){
+            printf("Please select 1-4\n");
+        }
+    }while(choice[0] != '1' &&  choice[0] != '2' &&  choice[0] != '3' &&  choice[0] != '4');
+    
+    do{
+        printf("Enter your search term: ");
+        fgets(key, MAX_LEN, stdin);
+        FLUSH;
+        RMN(key);
+        if(strlen(key) < 1){
+            printf("Please enter something to search!");
+        }
+    }while(strlen(key) < 1);    
+    
+    switch(choice[0]){
+        case '1':
+            while(node != NULL){
+                if(!strcmp(key, node->sin)){
+                    push(resultStack, node);
+                }        
+                node = node->link;
+            }    
+        break;
+            
+        case '2':
+            while(node != NULL){
+                if(!strcmp(key, node->firstName)){
+                    push(resultStack, node);
+                }        
+                node = node->link;
+            }    
+        break;
+        
+        case '3':
+            while(node != NULL){
+                if(!strcmp(key, node->lastName)){
+                    push(resultStack, node);
+                }        
+                node = node->link;
+            }            
+        break;
+        
+        case '4':
+            while(node != NULL){
+                printf("100 - %s: %d\n",node->salary, strcmp(key, node->salary));
+                if(!strcmp(key, node->salary)){
+                    push(resultStack, node);
+                }        
+                node = node->link;
+            }            
+        break;    
+    }
+    return resultStack;
+}
+    
+void printStack(stack_t* resultStack){
+    if(peek(resultStack)){
+        printf("Printing Results\n");
+        record_link* popped = NULL;
+        while((popped = pop(resultStack)) != NULL){
+            printf("\nRecord: \n");
+            printf("SIN: %s\n", popped->sin);
+            printf("First Name: %s\n", popped->firstName);
+            printf("Last Name: %s\n", popped->lastName);
+            printf("Salary: %s\n", popped->salary);       
+        }    
+    }else{
+        printf("Nothing Found! Maybe search something else?\n");
     }
 }

@@ -13,14 +13,16 @@
 
 int main() {
     //Menu Prompt
-
-    //     printf("\nPlease select:");
-    //     printf("\n1.\tList records");
-    //     printf("\n2.\tSort records");
-    //     printf("\n3.\tFind records");
-    //     printf("\n4.\tAdd record");
-    //     printf("\n5.\tDelete record");
-    //     printf("\nPlease select operation: ");
+    printf("\nPlease select:");
+    printf("\n1.\tList records");
+    printf("\n2.\tSort records");
+    printf("\n3.\tFind records");
+    printf("\n4.\tAdd record");
+    printf("\n5.\tDelete record");
+    printf("\nPlease select operation: ");
+    
+    
+    
     //     
     //     //if sort
     //     printf("\nPlease select sort by attribute (1=SIN, 2=First Name, 3=Last Name, 4=Annual Income)");
@@ -66,35 +68,31 @@ int main() {
 //        }                    
 //    }while(input[0] == 'Y');
     
-    
-    
 
-    
     
     //Delete Record
 //    record_link* head =  deleteRecord(recordName);
-    
-    
 
-
-    
-    
     //Sort Records
     
     record_BST_node* headBST = sortRecords(head, 1);
     printf("Ascending: \n");
     inorderPrint(headBST);
-    printf("Descending: \n");
-    reverseOrderPrint(sortRecords(head, 0));
+//    printf("Descending: \n");
+//    reverseOrderPrint(sortRecords(head, 0));
     
     
     
+    //Find Records
+    record_link* findHead = createRecords(recordName); //Create LL
+    stack_t* searchResults = searchRecords(findHead);
     
-    
-    
+    printStack(searchResults);
+
+        
+        
     //Print Records
 //    printLinkedList(head);
-    
     
     return 0;
     
