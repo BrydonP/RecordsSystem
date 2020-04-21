@@ -4,7 +4,9 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
+#include "functions.h"
 #include "functions.c"
+
 
 #define FLUSH stdin=freopen(NULL,"r",stdin)
 #define RMN(str) str[strcspn(str,"\n")]=0
@@ -12,7 +14,6 @@
 
 
 int main() {
-    FILE* fin;
     char fileName[MAX_LEN];
     printf("File to load records from: \n");
     //Input Variable
@@ -53,7 +54,7 @@ int main() {
         record_BST_node* headBST = sortRecords(sortHead);
         char choice[MAX_LEN];   
         do{
-            printf("Ascending or Descending?\n 1 - Ascending\n0 - Descending\n");
+            printf("Ascending or Descending?\n1 - Ascending\n0 - Descending\n");
             fgets(choice, MAX_LEN, stdin);
             FLUSH;
             RMN(choice);
@@ -66,7 +67,7 @@ int main() {
             }else{
                 printf("Please select 1 or 0\n");
             }   
-        }while(choice[0] != '1' && choice[0] != '2');    
+        }while(choice[0] != '1' && choice[0] != '0');    
     }else if(menuChoiceInt == 3){
         //Find Records        
         record_link* findHead = createRecords(fileName); //Create LL
@@ -75,19 +76,7 @@ int main() {
     }else if(menuChoiceInt == 4){
         //Add Record
         record_link* head = createRecords(fileName);
-        addRecord(head);
-        char input[MAX_LEN];
-        do{
-           printf("Would you like to add another record? (Y/N)\n");
-           fgets(input, MAX_LEN, stdin);
-           FLUSH;
-           RMN(input);  
-           if(input[0] == 'Y'){
-               addRecord(head);
-           }else{
-               printf("Please choose Y or N");
-           }                    
-       }while(input[0] == 'Y');           
+        addRecord(head);          
     }else if(menuChoiceInt == 5){
         //Delete
         record_link* head =  deleteRecord(fileName);
